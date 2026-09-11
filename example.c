@@ -103,12 +103,12 @@ app_status_t app_process(void)
       && (return_status_tidp == EXEC_STATUS_OK)
       && (return_status_lidp == EXEC_STATUS_OK))
   {
-    printf("\n\nAll test cases PASSED.\r\n");
+    PRINTF("\n\nAll test cases PASSED.\r\n");
     return_status = EXEC_STATUS_OK;
   }
   else
   {
-    printf("\n\nTest cases FAILED.\r\n");
+    PRINTF("\n\nTest cases FAILED.\r\n");
     return_status = EXEC_STATUS_ERROR;
   }
 
@@ -143,7 +143,7 @@ app_status_t M24M01TestSingleByte(void)
   app_status_t ret_val = EXEC_STATUS_OK;
 
   PRINTF("\n\n***************************************************************\r\n");
-  printf("                   -- I2C EEPROM TEST SINGLE BYTE-- \r\n");
+  PRINTF("                   -- I2C EEPROM TEST SINGLE BYTE-- \r\n");
   PRINTF("***************************************************************\r\n");
 
   uint8_t tx = 0x89;               /* Byte value to be programmed                                 */
@@ -154,7 +154,7 @@ app_status_t M24M01TestSingleByte(void)
   /* Read current content at target address */
   if (m24m01_drv_read_data_addr16(pM24m010, &rx, target_addr, nbyte) == 0)
   {
-    printf("Read Memory Data : 0x%x at Address : 0x%x\r\n", rx, target_addr);
+    PRINTF("Read Memory Data : 0x%x at Address : 0x%x\r\n", rx, target_addr);
   }
 
   /* Write single byte to EEPROM */
@@ -168,18 +168,18 @@ app_status_t M24M01TestSingleByte(void)
   {
     if (rx == tx)
     {
-      printf("TestByte | Target: %s | Address: 0x%u | TX: 0x%x | RX: 0x%x | Result: PASSED \r\n",
+      PRINTF("TestByte | Target: %s | Address: 0x%u | TX: 0x%x | RX: 0x%x | Result: PASSED \r\n",
              "M24M01", target_addr, tx, rx);
     }
     else
     {
-      printf("TestByte | Target: %s| Address: %u | Result: FAILED \r\n", "M24M01", target_addr);
+      PRINTF("TestByte | Target: %s| Address: %u | Result: FAILED \r\n", "M24M01", target_addr);
       ret_val = EXEC_STATUS_ERROR;
     }
   }
   else
   {
-    printf("TestByte | Target: %s| Write or Read Operation FAILED \r\n", "M24M01");
+    PRINTF("TestByte | Target: %s| Write or Read Operation FAILED \r\n", "M24M01");
     ret_val = EXEC_STATUS_ERROR;
   }
 
@@ -199,14 +199,14 @@ app_status_t M24M01TestData(void)
   uint16_t idx;
 
   PRINTF("\n\n***************************************************************\r\n");
-  printf("                   -- I2C EEPROM TEST DATA-- \r\n");
+  PRINTF("                   -- I2C EEPROM TEST DATA-- \r\n");
   PRINTF("***************************************************************\r\n");
 
   unsigned int target_addr = 0x00;       /* Start address for buffer test                             */
   memset(rx_buff, 0x00, sizeof(rx_buff));
 
   /* Display memory content before write */
-  printf("\n\nMemory contents before write (256 bytes): \r\n");
+  PRINTF("\n\nMemory contents before write (256 bytes): \r\n");
   if (m24m01_drv_read_data_addr16(pM24m010, rx_buff, target_addr, SIZE256) == 0)
   {
     for (idx = 0; idx < SIZE256; idx++)
@@ -223,7 +223,7 @@ app_status_t M24M01TestData(void)
 
   if ((w_ret == 0) && (r_ret == 0))
   {
-    printf("\n\nMemory contents after write: \r\n");
+    PRINTF("\n\nMemory contents after write: \r\n");
     /* Compare content byte-by-byte against original tx256 buffer */
     for (idx = 0; idx < sizeof(rx_buff); idx++)
     {
@@ -239,17 +239,17 @@ app_status_t M24M01TestData(void)
 
     if (idx == SIZE256)
     {
-      printf("\nAll data to M24M01 written successfully!\r\n");
+      PRINTF("\nAll data to M24M01 written successfully!\r\n");
     }
     else
     {
-      printf("Error in M24M01 write.\r\n");
+      PRINTF("Error in M24M01 write.\r\n");
       return EXEC_STATUS_ERROR;
     }
 
     /* Clear test area to 0xFF to restore initial state */
     target_addr = 0;
-    printf("\nReset memory to 0xFF from Address:0x%2.2X \r\n", target_addr);
+    PRINTF("\nReset memory to 0xFF from Address:0x%2.2X \r\n", target_addr);
     memset(Transmit_Buff, 0xFF, sizeof(Transmit_Buff));
 
     if (m24m01_drv_write_data_addr16(pM24m010, Transmit_Buff, target_addr, M24_PAGE_SIZE, SIZE256) != 0)
@@ -267,13 +267,13 @@ app_status_t M24M01TestData(void)
           PRINTF("0x%x ", rx_buff[idx]);
         }
       }
-      printf("\nMemory contents of M24M01 cleared to 0xFF \r\n");
+      PRINTF("\nMemory contents of M24M01 cleared to 0xFF \r\n");
     }
 
   }
   else
   {
-    printf("M24M01 Test Memory Data: FAILED \r\n");
+    PRINTF("M24M01 Test Memory Data: FAILED \r\n");
     ret_val = EXEC_STATUS_ERROR;
   }
 
@@ -291,7 +291,7 @@ app_status_t M24M01TestPage(void)
 {
 
   PRINTF("\n\n***************************************************************\r\n");
-  printf("                   -- I2C EEPROM TEST PAGE-- \r\n");
+  PRINTF("                   -- I2C EEPROM TEST PAGE-- \r\n");
   PRINTF("***************************************************************\r\n");
 
   app_status_t ret_val = EXEC_STATUS_OK;
@@ -327,17 +327,17 @@ app_status_t M24M01TestPage(void)
 
     if (idx == M24_PAGE_SIZE)
     {
-      printf("\nAll data to M24M01 written successfully!\r\n");
+      PRINTF("\nAll data to M24M01 written successfully!\r\n");
     }
     else
     {
-      printf("Error in M24M01 write.\r\n");
+      PRINTF("Error in M24M01 write.\r\n");
       return EXEC_STATUS_ERROR;
     }
 
     /* Clear tested page to 0xFF */
     target_addr = 0;
-    printf("\nReset memory to 0xFF from Address:0x%2.2X \r\n", target_addr);
+    PRINTF("\nReset memory to 0xFF from Address:0x%2.2X \r\n", target_addr);
     memset(tx, 0xFF, sizeof(tx));
 
     if (m24m01_drv_write_page_addr16(pM24m010, tx, target_addr, M24_PAGE_SIZE) != 0)
@@ -346,12 +346,12 @@ app_status_t M24M01TestPage(void)
     }
     else
     {
-      printf("\nMemory contents of M24M01 cleared to 0xFF \r\n");
+      PRINTF("\nMemory contents of M24M01 cleared to 0xFF \r\n");
     }
   }
   else
   {
-    printf("Test PAGE | Target: %s| Write or Read Operation FAILED \r\n", "M24M01");
+    PRINTF("Test PAGE | Target: %s| Write or Read Operation FAILED \r\n", "M24M01");
     ret_val = EXEC_STATUS_ERROR;
   }
 
@@ -369,7 +369,7 @@ app_status_t M24M01TestIDPage(void)
 {
 
   PRINTF("\n\n***************************************************************\r\n");
-  printf("                   -- I2C EEPROM TEST ID PAGE-- \r\n");
+  PRINTF("                   -- I2C EEPROM TEST ID PAGE-- \r\n");
   PRINTF("***************************************************************\r\n");
 
   app_status_t ret_val = EXEC_STATUS_OK;
@@ -383,12 +383,12 @@ app_status_t M24M01TestIDPage(void)
   memset(tx, 0x55, M24_PAGE_SIZE);
 
   /* Read ID page before write and print current content */
-  printf("M24M01 ID page before write \r\n");
+  PRINTF("M24M01 ID page before write \r\n");
   if (m24m01_drv_read_idpage_addr16(pM24m010, rx, target_addr, nbyte) == 0)
   {
     for (idx = 0; idx < M24_PAGE_SIZE; idx++)
     {
-      printf("0x%x ", rx[idx]);
+      PRINTF("0x%x ", rx[idx]);
     }
   }
   else
@@ -401,7 +401,7 @@ app_status_t M24M01TestIDPage(void)
 
   /* Read back ID page content */
   int32_t r_ret = m24m01_drv_read_idpage_addr16(pM24m010, rx, target_addr, nbyte);
-  printf("\n\nM24M01 ID page after write \r\n");
+  PRINTF("\n\nM24M01 ID page after write \r\n");
   if ((w_ret == 0) && (r_ret == 0))
   {
     for (idx = 0; idx < M24_MEMORY_SIZE; idx++)
@@ -418,17 +418,17 @@ app_status_t M24M01TestIDPage(void)
 
     if (idx == M24_PAGE_SIZE)
     {
-      printf("\nAll data to M24M01 ID Page written successfully!\r\n");
+      PRINTF("\nAll data to M24M01 ID Page written successfully!\r\n");
     }
     else
     {
-      printf("Error in M24M01 ID Page write.\r\n");
+      PRINTF("Error in M24M01 ID Page write.\r\n");
       return EXEC_STATUS_ERROR;
     }
 
     /* Clear ID page back to 0xFF after test */
     target_addr = 0;
-    printf("\nReset ID Page memory to 0xFF from Address:0x%2.2X \r\n", target_addr);
+    PRINTF("\nReset ID Page memory to 0xFF from Address:0x%2.2X \r\n", target_addr);
     memset(tx, 0xFF, sizeof(tx));
 
     if (m24m01_drv_write_idpage_addr16(pM24m010, tx, target_addr, M24_PAGE_SIZE) != 0)
@@ -437,12 +437,12 @@ app_status_t M24M01TestIDPage(void)
     }
     else
     {
-      printf("\nMemory contents of M24M01 ID Page cleared to 0xFF \r\n");
+      PRINTF("\nMemory contents of M24M01 ID Page cleared to 0xFF \r\n");
     }
   }
   else
   {
-    printf("Test ID Page PAGE | Target: %s| Write or Read Operation FAILED \r\n", "M24M01");
+    PRINTF("Test ID Page PAGE | Target: %s| Write or Read Operation FAILED \r\n", "M24M01");
     ret_val = EXEC_STATUS_ERROR;
   }
 
@@ -458,13 +458,13 @@ app_status_t M24M01TestIDPage(void)
 app_status_t M24M01LockIDPage(void)
 {
   PRINTF("\n\n***************************************************************\r\n");
-  printf("          -- I2C EEPROM LOCK TEST ID PAGE PERMANENTLY -- \r\n");
+  PRINTF("          -- I2C EEPROM LOCK TEST ID PAGE PERMANENTLY -- \r\n");
   PRINTF("***************************************************************\r\n");
 
   app_status_t ret_val = EXEC_STATUS_UNKNOWN;
 #if (!LOCK_ID_PAGE_EXECUTE)
   /* ID page lock feature disabled at compile time */
-  printf("[WARN] Enable Lock ID Page function in Application to execute! \r\n");
+  PRINTF("[WARN] Enable Lock ID Page function in Application to execute! \r\n");
   ret_val = EXEC_STATUS_OK;
 #else
   /* Request permanent lock of the ID page through driver */
